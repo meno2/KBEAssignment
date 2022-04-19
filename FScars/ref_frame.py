@@ -11,7 +11,7 @@ class Frame(GeomBase):
 
     @Attribute
     def vectors(self):
-        return [self.pos.Vx, self.pos.Vy, -self.pos.Vz]
+        return [self.pos.Vx, self.pos.Vy, self.pos.Vz]
 
     @Part
     def vector(self):
