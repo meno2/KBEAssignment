@@ -54,16 +54,15 @@ class WingElement(GeomBase):
         return LoftedSurface([self.airfoil1_scaled, self.airfoil2_scaled],
                              mesh_deflection=0.0001)
 
-    @Part  # (in_tree=False)
-    def airfoil3_unscaled(self):
-        return Naca4AirfoilCurve(designation=self.airfoil_name,
-                                 position=translate(self.position, "z", 0.25))
-
     # @Part  # (in_tree=False)
     # def airfoil3_unscaled(self):
     #     return Naca4AirfoilCurve(designation=self.airfoil_name,
-    #                              position=translate(rotate(self.position, Vector(0, 1, 0), 45, deg=True), "z", 0.5, "x",
-    #                                                 -0.5))
+    #                              position=translate(self.position, "z", 0.25))
+
+    @Part  # (in_tree=False)
+    def airfoil3_unscaled(self):
+        return Naca4AirfoilCurve(designation=self.airfoil_name,
+                                 position= rotate(self.position, "y", 45, deg=True))
 
     @Part
     def airfoil3_scaled(self):
@@ -72,18 +71,16 @@ class WingElement(GeomBase):
                            factor=0.5,
                            mesh_deflection=0.0001)
 
-    @Part  # (in_tree=False)
-    def airfoil4_unscaled(self):
-        return Naca4AirfoilCurve(designation=self.airfoil_name,
-                                 position=translate(translate(self.position, 'y', 1),
-                                                    "z", 0.25))
-
     # @Part  # (in_tree=False)
     # def airfoil4_unscaled(self):
     #     return Naca4AirfoilCurve(designation=self.airfoil_name,
-    #                              position=translate(
-    #                                  rotate(translate(self.position, 'y', 1), Vector(0, 1, 0), 45, deg=True),
-    #                                  "z", 0.5, "x", -0.5))
+    #                              position=translate(self.position, 'y', 1, "z", 0.25))
+
+
+    @Part  # (in_tree=False)
+    def airfoil4_unscaled(self):
+        return Naca4AirfoilCurve(designation=self.airfoil_name,
+                                 position= rotate(translate(self.position, 'y', 1), "y", 45, deg=True))
 
 
     @Part
@@ -96,18 +93,17 @@ class WingElement(GeomBase):
     @Part
     def wing_loft_surf2(self):  # generate a surface
         return LoftedSurface([self.airfoil3_scaled, self.airfoil4_scaled],
-
                              mesh_deflection=0.0001)
-
-    @Part  # (in_tree=False)
-    def airfoil5_unscaled(self):
-        return Naca4AirfoilCurve(designation=self.airfoil_name,
-                                 position=translate(self.position, "z", 0.5))
 
     # @Part  # (in_tree=False)
     # def airfoil5_unscaled(self):
     #     return Naca4AirfoilCurve(designation=self.airfoil_name,
-    #                              position=rotate(translate(self.position, "z", 0.5), "y", 80, deg=True))
+    #                              position=translate(self.position, "z", 0.5))
+
+    @Part  # (in_tree=False)
+    def airfoil5_unscaled(self):
+        return Naca4AirfoilCurve(designation=self.airfoil_name,
+                                 position=rotate(self.position, "y", 80, deg=True))
 
     @Part
     def airfoil5_scaled(self):
@@ -116,16 +112,16 @@ class WingElement(GeomBase):
                            factor=0.5,
                            mesh_deflection=0.0001)
 
-    @Part  # (in_tree=False)
-    def airfoil6_unscaled(self):
-        return Naca4AirfoilCurve(designation=self.airfoil_name,
-                                 position=translate(translate(self.position, 'y', 1), "z", 0.5))
-    #
     # @Part  # (in_tree=False)
     # def airfoil6_unscaled(self):
     #     return Naca4AirfoilCurve(designation=self.airfoil_name,
-    #                              position=rotate(translate(translate(self.position, 'y', 1), "z", 0.5), "y", 80,
-    #                                              deg=True))
+    #                              position=translate(translate(self.position, 'y', 1), "z", 0.5))
+    #
+    @Part  # (in_tree=False)
+    def airfoil6_unscaled(self):
+        return Naca4AirfoilCurve(designation=self.airfoil_name,
+                                 position=rotate(translate(self.position, 'y', 1), "y", 80,
+                                                 deg=True))
 
     @Part
     def airfoil6_scaled(self):
