@@ -10,10 +10,10 @@ import numpy as np
 class WingElement(GeomBase):
 
     angleOfIncidence = Input(-20*np.pi/90)
-    liftCoefficient = Input()
-    dragCoefficient = Input()
-    span = Input()
-    meanChord = Input()
+    #liftCoefficient = Input()
+    #dragCoefficient = Input()
+    span = Input(1)
+    #meanChord = Input()
     twistDistribution = Input()
     airfoil_name=Input()
     chord=Input()
@@ -43,7 +43,7 @@ class WingElement(GeomBase):
     @Part   (in_tree=False)
     def airfoil2_unscaled(self):
         return Naca4AirfoilCurve(designation=self.airfoil_name,
-                                 position=rotate(translate(self.position, 'y', 1), "x", 180, deg=True))
+                                 position=rotate(translate(self.position, 'y', self.span), "x", 180, deg=True))
 
     @Part (in_tree=False)
     def airfoil2_scaled(self):
@@ -53,9 +53,14 @@ class WingElement(GeomBase):
                            mesh_deflection=0.0001)
 
 
+    # @Part
+    # def wing_loft_surf(self):  # generate a surface
+    #     return LoftedSurface([self.airfoil1_scaled, self.airfoil2_scaled],
+    #                          mesh_deflection=0.0001)
+
     @Part
-    def wing_loft_surf(self):  # generate a surface
-        return LoftedSurface([self.airfoil1_scaled, self.airfoil2_scaled],
+    def wing_loft_solid(self):  # generate a surface
+        return LoftedSolid([self.airfoil1_scaled, self.airfoil2_scaled],
                              mesh_deflection=0.0001)
 
     @Part (in_tree=False)
@@ -75,7 +80,7 @@ class WingElement(GeomBase):
     @Part (in_tree=False)
     def airfoil4_unscaled(self):
         return Naca4AirfoilCurve(designation=self.airfoil_name,
-                                 position=rotate(translate(self.position, 'y', 1, "z", 0.05, "x", 0.4), "x", 180, deg=True
+                                 position=rotate(translate(self.position, 'y', self.span, "z", 0.05, "x", 0.4), "x", 180, deg=True
                                                     ))
 
     @Part (in_tree= False)
@@ -99,7 +104,7 @@ class WingElement(GeomBase):
 
     @Part
     def wing_loft_surf2(self):  # generate a surface
-        return LoftedSurface([self.airfoil3_scaled_rotated, self.airfoil4_scaled_rotated],
+        return LoftedSolid([self.airfoil3_scaled_rotated, self.airfoil4_scaled_rotated],
 
                              mesh_deflection=0.0001)
 
@@ -120,7 +125,7 @@ class WingElement(GeomBase):
     @Part  (in_tree=False)
     def airfoil6_unscaled(self):
         return Naca4AirfoilCurve(designation=self.airfoil_name,
-                                 position=rotate(translate(self.position, 'y', 1, "z", 0.3, "x" , 0.6), "x", 180, deg=True))
+                                 position=rotate(translate(self.position, 'y', self.span, "z", 0.3, "x" , 0.6), "x", 180, deg=True))
 
 
     @Part (in_tree= False)
@@ -141,7 +146,7 @@ class WingElement(GeomBase):
                             rotation_point=self.airfoil6_scaled.position, vector=Vector(0, 1, 0))
     @Part
     def wing_loft_surf3(self):  # generate a surface
-        return LoftedSurface([self.airfoil5_scaled_rotated, self.airfoil6_scaled_rotated],
+        return LoftedSolid([self.airfoil5_scaled_rotated, self.airfoil6_scaled_rotated],
                              mesh_deflection=0.0001)
     # @Part
     # def airfoil1_scaled_edits(self):
