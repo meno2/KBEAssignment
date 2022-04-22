@@ -9,7 +9,6 @@ from parapy.geom import *
 from parapy.mesh import salome
 from parapy.lib.su2 import *
 
-parapy.lib.su2.
 from parapy.mesh.core.controls import MeshControl
 
 # #
@@ -193,7 +192,7 @@ if __name__ == '__main__':
 
 	# Headrest = Completecar.children[0].children[0].children[1].children[1].children[0]
 	#Rearwing = Completecar.children[0].children[3].children[0].children[0]
-	Chassis = Completecar.children[0].children[0].children[0]
+	Chassis = Completecar.children[0].children[0]
 	# mesh.write(r"test.unv")
 	obj = MeshedBoundingBox()
 	obj2 = ImportedGeometry()

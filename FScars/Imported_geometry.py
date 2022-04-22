@@ -25,5 +25,13 @@ class ImportedGeometry(GeomBase):
 		return SewnSolid(self.GeometrySTEP.children[0].children[0].children[2])
 
 	@Part
-	def geometry_to_mesh(self):
-		return SubtractedSolid(shape_in = self.bounding_box, tool= [self.chassis, self.wheel2, self.wheel1], transparency = 0.7)
+	def chassis_mirrored(self):
+		return MirroredShape(shape_in = self.chassis, reference_point=Point(0,0,0), vector1=Vector(1,0,0), vector2=(Vector(0,0,1)))
+
+	@Part
+	def wheel3(self):
+		return MirroredShape(shape_in = self.wheel1, reference_point=Point(0,0,0), vector1=Vector(1,0,0), vector2=(Vector(0,0,1)))
+
+	@Part
+	def wheel4(self):
+		return MirroredShape(shape_in = self.wheel2, reference_point=Point(0,0,0), vector1=Vector(1,0,0), vector2=(Vector(0,0,1)))

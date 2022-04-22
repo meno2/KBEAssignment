@@ -24,7 +24,7 @@ class FSCar(Base):
     def imported_geometry(self):
         return ImportedGeometry()
 
-    ## CONSTRUCTING MESH
+    ## CONSTRUCTING MESH ##
 
     @Part
     def bounding_box(self):
