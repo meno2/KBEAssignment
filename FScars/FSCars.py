@@ -48,7 +48,6 @@ class FSCar(Base):
                                    self.geometry_to_mesh.faces[6:]])
 
 
-
 if __name__ == '__main__':
     from parapy.gui import display
 

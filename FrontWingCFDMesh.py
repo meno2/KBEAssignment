@@ -1,3 +1,4 @@
+import parapy.lib.su2
 from parapy.geom import Box, translate
 # from parapy.mesh import FaceGroup, salome
 #from parapy.lib.su2 import *
@@ -7,6 +8,8 @@ from parapy.core import *
 from parapy.geom import *
 from parapy.mesh import salome
 from parapy.lib.su2 import *
+
+parapy.lib.su2.
 from parapy.mesh.core.controls import MeshControl
 
 # #
@@ -203,5 +206,7 @@ if __name__ == '__main__':
 	print("Writing Grid:")
 	parapy.lib.su2.write_su2(obj2.grid, "RearWingGrid.su2")
 	print("Done! ")
+
+
 
 
