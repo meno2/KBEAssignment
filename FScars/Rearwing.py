@@ -26,3 +26,9 @@ class RearWing(GeomBase):
         return EndPlate(height=self.height,
                          width=self.width,
                          depth=self.depth)
+
+if __name__ == '__main__':
+    from parapy.gui import display
+
+    obj = RearWing()
+    display(obj)
