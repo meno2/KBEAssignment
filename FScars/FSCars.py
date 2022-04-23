@@ -11,6 +11,8 @@ import subprocess
 import os
 from parapy.gui.wx_utils import popup
 import vtk
+from parapy.exchange.step.reader import STEPReader
+
 
 class FSCar(Base):
     speed = Input()
@@ -80,7 +82,9 @@ class FSCar(Base):
 if __name__ == '__main__':
     from parapy.gui import display
 
+    GeometrySTEP = STEPReader(filename=  "StructuralChassis.stp")
+
     obj = FSCar()
 
 
-    display(obj)
+    display((obj, GeometrySTEP))
