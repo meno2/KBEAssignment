@@ -2,7 +2,7 @@ from parapy.core import *
 from parapy.geom import *
 from parapy.mesh import salome
 
-from FScars import Connector
+#from FScars import Connector
 from Rearwing import RearWing
 from Imported_geometry import ImportedGeometry
 from parapy.core import action
