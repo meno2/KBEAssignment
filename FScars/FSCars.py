@@ -11,7 +11,7 @@ import subprocess
 import os
 from parapy.gui.wx_utils import popup
 import vtk
-from Connector import Connector
+#from Connector import Connector
 
 from parapy.exchange.step.reader import STEPReader
 

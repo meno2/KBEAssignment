@@ -2,7 +2,7 @@ ISO-10303-21;
 HEADER;
 FILE_DESCRIPTION(('CATIA V5 STEP Exchange'),'2;1');
 
-FILE_NAME('E:\\Menno\\Year4LR\\KBE\\AssignmentGitHub\\StructuralChassis.stp','2022-04-23T11:40:49+00:00',('none'),('none'),'CATIA Version 5 Release 21 GA (IN-10)','CATIA V5 STEP AP203','none');
+FILE_NAME('E:\\Menno\\Year4LR\\KBE\\AssignmentGitHub\\StructuralChassis.stp','2022-04-23T11:43:06+00:00',('none'),('none'),'CATIA Version 5 Release 21 GA (IN-10)','CATIA V5 STEP AP203','none');
 
 FILE_SCHEMA(('CONFIG_CONTROL_DESIGN'));
 
@@ -10295,7 +10295,7 @@ DATA;
 #20=APPROVAL_STATUS('not_yet_approved') ;
 #19=APPROVAL_ROLE('APPROVER') ;
 #13=DATE_AND_TIME(#11,#12) ;
-#12=LOCAL_TIME(13,40,48.,#10) ;
+#12=LOCAL_TIME(13,43,6.,#10) ;
 #10=COORDINATED_UNIVERSAL_TIME_OFFSET(0,0,.AHEAD.) ;
 #93=ORIENTED_EDGE('',*,*,#75,.T.) ;
 #94=ORIENTED_EDGE('',*,*,#85,.F.) ;
