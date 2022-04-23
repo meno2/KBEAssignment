@@ -30,7 +30,7 @@ class WingElement(GeomBase):
     @Part   (in_tree=False)
     def airfoil1_unscaled(self):
         return Naca4AirfoilCurve(designation=self.airfoil_name,
-                                 position= translate(rotate(self.position, "x", 180, deg=True), "x", 1700, "y", 500,"z", -600))
+                                 position= translate(rotate(self.position, "x", 180, deg=True), "x", 1800, "y", 500,"z", -800))
 
     @Part (in_tree= False)
     def airfoil1_scaled(self):
@@ -43,7 +43,7 @@ class WingElement(GeomBase):
     @Part   (in_tree=False)
     def airfoil2_unscaled(self):
         return Naca4AirfoilCurve(designation=self.airfoil_name,
-                                 position=translate(rotate(translate(self.position, 'y', self.span, "x", 1700), "x", 180, deg=True), "y", 500, "z", -600))
+                                 position=translate(rotate(translate(self.position, 'y', self.span, "x", 1800), "x", 180, deg=True), "y", 500, "z", -800))
 
     @Part (in_tree=False)
     def airfoil2_scaled(self):
@@ -66,7 +66,7 @@ class WingElement(GeomBase):
     @Part (in_tree=False)
     def airfoil3_unscaled(self):
         return Naca4AirfoilCurve(designation=self.airfoil_name,
-                                 position=translate(rotate(translate(self.position, "z", 50, "x", 2100, "y", -500), "x", 180, deg=True), "z", -600))
+                                 position=translate(rotate(translate(self.position, "z", 50, "x", 2200, "y", -500), "x", 180, deg=True), "z", -800))
 
 
 
@@ -80,8 +80,8 @@ class WingElement(GeomBase):
     @Part (in_tree=False)
     def airfoil4_unscaled(self):
         return Naca4AirfoilCurve(designation=self.airfoil_name,
-                                 position=translate(rotate(translate(self.position, 'y', self.span, "z", 50, "x", 2100), "x", 180, deg=True
-                                                    ),"y", 500, "z", -600))
+                                 position=translate(rotate(translate(self.position, 'y', self.span, "z", 50, "x", 2200), "x", 180, deg=True
+                                                    ),"y", 500, "z", -800))
 
     @Part (in_tree= False)
     def airfoil3_scaled_rotated(self):
@@ -111,7 +111,7 @@ class WingElement(GeomBase):
     @Part   (in_tree=False)
     def airfoil5_unscaled(self):
         return Naca4AirfoilCurve(designation=self.airfoil_name,
-                                 position=translate(rotate(translate(self.position, "z", 300, "x", 2300, "y", -500), "x", 180, deg=True), "z", -600))
+                                 position=translate(rotate(translate(self.position, "z", 300, "x", 2400, "y", -500), "x", 180, deg=True), "z", -800))
 
 
 
@@ -125,7 +125,7 @@ class WingElement(GeomBase):
     @Part  (in_tree=False)
     def airfoil6_unscaled(self):
         return Naca4AirfoilCurve(designation=self.airfoil_name,
-                                 position=translate(rotate(translate(self.position, 'y', self.span, "z", 300, "x" , 2300), "x", 180, deg=True), "y", 500, "z", -600))
+                                 position=translate(rotate(translate(self.position, 'y', self.span, "z", 300, "x" , 2400), "x", 180, deg=True), "y", 500, "z", -800))
 
 
     @Part (in_tree= False)

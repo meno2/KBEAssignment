@@ -31,13 +31,14 @@ class Connector(GeomBase):
 
     @Part
     def cyl(self):
-        return Cylinder(radius= 10, height=100,
-                        position=Position(Point(1200, 0, 500)))
+        return Cylinder(radius= 10, height=350,
+                        position=Position(Point(1350, 50, 500)))
 
     @Part
     def cyl2(self):
-        return Cylinder(radius=10, height=100,
-                        position=rotate(Position(Point(1300,0, 600)), "y", np.pi/2))
+        return MirroredShape(shape_in=self.cyl, reference_point=self.position,
+                             vector1=(1, 0, 0),
+                             vector2=(0, 0, 1))
 
 
 
