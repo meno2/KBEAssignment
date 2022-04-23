@@ -4,13 +4,7 @@ from parapy.exchange.step.reader import STEPReader
 import numpy as np
 
 class ImportedGeometry(GeomBase):
-
-
 	GeometrySTEP = STEPReader(filename=  "GeometryToImport.stp")
-
-	@Part
-	def bounding_box(self):
-		return Box(self.boundingboxlength, self.boundingboxwidth, self.boundingboxheight, position = Position(Point(-self.boundingboxinlet, 0, 0)), transparency = 0.4)
 
 	@Part
 	def chassis(self):

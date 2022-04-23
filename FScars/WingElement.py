@@ -103,7 +103,7 @@ class WingElement(GeomBase):
 
 
     @Part
-    def wing_loft_surf2(self):  # generate a surface
+    def wing_loft_solid2(self):  # generate a surface
         return LoftedSolid([self.airfoil3_scaled_rotated, self.airfoil4_scaled_rotated],
 
                              mesh_deflection=0.0001)
@@ -145,7 +145,7 @@ class WingElement(GeomBase):
         return RotatedCurve(curve_in=self.airfoil6_scaled, angle=-80 * np.pi / 180,
                             rotation_point=self.airfoil6_scaled.position, vector=Vector(0, 1, 0))
     @Part
-    def wing_loft_surf3(self):  # generate a surface
+    def wing_loft_solid3(self):  # generate a surface
         return LoftedSolid([self.airfoil5_scaled_rotated, self.airfoil6_scaled_rotated],
                              mesh_deflection=0.0001)
     # @Part

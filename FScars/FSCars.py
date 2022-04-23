@@ -3,7 +3,14 @@ from parapy.geom import *
 from parapy.mesh import salome
 from Rearwing import RearWing
 from Imported_geometry import ImportedGeometry
-
+from parapy.core import action
+from parapy.core.decorators import Action
+from parapy.lib.su2 import *
+from SU2Preprocessing import preprocessing
+import subprocess
+import os
+from parapy.gui.wx_utils import popup
+import vtk
 
 class FSCar(Base):
     speed = Input()
@@ -28,11 +35,19 @@ class FSCar(Base):
 
     @Part
     def bounding_box(self):
-        return Box(self.boundingboxlength, self.boundingboxwidth, self.boundingboxheight, position=Position(Point(-self.boundingboxinlet, 0, 0)), transparency=0.4)
+        return Box(self.boundingboxlength, self.boundingboxwidth, self.boundingboxheight,
+                   position=Position(Point(-self.boundingboxinlet, 0, 0)), transparency=0.4)
 
     @Part
     def geometry_to_mesh(self):
-        return SubtractedSolid(shape_in=self.bounding_box, tool=[self.imported_geometry.chassis, self.imported_geometry.wheel2, self.imported_geometry.wheel1],
+        return SubtractedSolid(shape_in=self.bounding_box, tool=[self.imported_geometry.chassis,
+                                                                 self.imported_geometry.wheel2,
+                                                                 self.imported_geometry.wheel1,
+                                                                 self.rear_wing.wing_element.wing_loft_solid,
+                                                                 self.rear_wing.wing_element.wing_loft_solid2,
+                                                                 self.rear_wing.wing_element.wing_loft_solid3,
+                                                                 self.rear_wing.end_plates.end_plate1,
+                                                                 self.rear_wing.end_plates.end_plate2],
                                transparency=0.7)
 
     @Part
@@ -47,9 +62,25 @@ class FSCar(Base):
                                    self.geometry_to_mesh.faces[4], self.geometry_to_mesh.faces[5],
                                    self.geometry_to_mesh.faces[6:]])
 
+    @action(context=Action.Context.INSPECTOR, label="Once generated, export mesh", button_label="Export")
+    def export_mesh(self):
+        popup("Process Initiated", "Mesh is being exported - check Python log for status", cancel_button=False)
+        parapy.lib.su2.write_su2(self.mesh, "mesh_of_car.su2")
+        preprocessing("mesh_of_car.su2", ["Front", "Right", "Top", "Left", "Bottom", "Rear", "Wall"])
+
+    @action(context=Action.Context.INSPECTOR, label="Run SU2", button_label="Run")
+    def run_SU2(self):
+        popup("Process Initiated", "SU2 is being run - check Python log for status", cancel_button=False)
+        stream = os.popen("%SU2_RUN%SU2_CFD SU2_config.cfg")
+        output = stream.read()
+        output
+
+
 
 if __name__ == '__main__':
     from parapy.gui import display
 
     obj = FSCar()
+
+
     display(obj)
