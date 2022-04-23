@@ -35,6 +35,10 @@ class FSCar(Base):
     def imported_geometry(self):
         return ImportedGeometry()
 
+    @Part
+    def connector(self):
+        return Connector()
+
     ## CONSTRUCTING MESH ##
 
     @Part
