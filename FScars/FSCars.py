@@ -85,8 +85,8 @@ if __name__ == '__main__':
     from parapy.gui import display
 
     GeometrySTEP = STEPReader(filename=  "StructuralChassis.stp")
-
+    CFDModel = STEPReader(filename=  "DUT21_CFDModel.stp")
     obj = FSCar()
 
 
-    display((obj, GeometrySTEP))
+    display((obj, GeometrySTEP, CFDModel))
