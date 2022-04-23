@@ -1,7 +1,8 @@
 from parapy.core import *
 from parapy.geom import *
+import numpy as np
 
-class Connector(RearWing):
+class Connector(GeomBase):
     youngs_modulus = Input()
     force = Input()
     length = Input()
@@ -27,3 +28,22 @@ class Connector(RearWing):
     @Attribute
     def force_check(self):
         return self.deflection_dist / self.force_per_area < 10 / 0.88 if self.force_type == "distributed" else self.deflection_point / self.force < 25 / 50
+
+    @Part
+    def cyl(self):
+        return Cylinder(radius= 10, height=100,
+                        position=Position(Point(1200, 0, 500)))
+
+    @Part
+    def cyl2(self):
+        return Cylinder(radius=10, height=100,
+                        position=rotate(Position(Point(1300,0, 600)), "y", np.pi/2))
+
+
+
+if __name__ == '__main__':
+    from parapy.gui import display
+
+    obj = Connector(label="Connector")
+
+    display(obj)

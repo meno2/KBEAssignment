@@ -1,6 +1,8 @@
 from parapy.core import *
 from parapy.geom import *
 from parapy.mesh import salome
+
+#from FScars import Connector
 from Rearwing import RearWing
 from Imported_geometry import ImportedGeometry
 from parapy.core import action
@@ -11,7 +13,7 @@ import subprocess
 import os
 from parapy.gui.wx_utils import popup
 import vtk
-#from Connector import Connector
+from Connector import Connector
 
 from parapy.exchange.step.reader import STEPReader
 
@@ -34,6 +36,10 @@ class FSCar(Base):
     @Part
     def imported_geometry(self):
         return ImportedGeometry()
+
+    @Part
+    def connector(self):
+        return Connector()
 
     ## CONSTRUCTING MESH ##
 
