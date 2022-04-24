@@ -18,7 +18,7 @@ class WingElement(GeomBase):
     #meanChord = Input()
     twistDistribution = Input()
     airfoil_name=Input()
-    chord=Input()
+    chord=Input(500)
 
     @Part
     def aircraft_frame(self):
@@ -38,7 +38,7 @@ class WingElement(GeomBase):
     def airfoil1_scaled(self):
         return ScaledCurve(curve_in= self.airfoil1_unscaled,
                            reference_point= self.airfoil1_unscaled.end,
-                           factor= 500,
+                           factor= self.chord,
                            mesh_deflection=0.0001)
 
 
@@ -51,7 +51,7 @@ class WingElement(GeomBase):
     def airfoil2_scaled(self):
         return ScaledCurve(curve_in=self.airfoil2_unscaled,
                            reference_point=self.airfoil2_unscaled.start,
-                           factor=500,
+                           factor=self.chord,
                            mesh_deflection=0.0001)
 
 
@@ -76,7 +76,7 @@ class WingElement(GeomBase):
     def airfoil3_scaled(self):
         return ScaledCurve(curve_in=self.airfoil3_unscaled,
                            reference_point=self.airfoil3_unscaled.start,
-                           factor=500,
+                           factor=self.chord*0.8,
                            mesh_deflection=0.0001)
 
     @Part (in_tree=False)
@@ -99,7 +99,7 @@ class WingElement(GeomBase):
     def airfoil4_scaled(self):
         return ScaledCurve(curve_in=self.airfoil4_unscaled,
                            reference_point=self.airfoil4_unscaled.start,
-                           factor=500,
+                           factor=self.chord*0.8,
                            mesh_deflection=0.0001)
 
 
@@ -121,7 +121,7 @@ class WingElement(GeomBase):
     def airfoil5_scaled(self):
         return ScaledCurve(curve_in=self.airfoil5_unscaled,
                            reference_point=self.airfoil5_unscaled.start,
-                           factor=500,
+                           factor=self.chord*0.5,
                            mesh_deflection=0.0001)
 
     @Part  (in_tree=False)
@@ -134,14 +134,14 @@ class WingElement(GeomBase):
     def airfoil6_scaled(self):
         return ScaledCurve(curve_in=self.airfoil6_unscaled,
                            reference_point=self.airfoil6_unscaled.start,
-                           factor=500,
+                           factor=self.chord*0.5,
                            mesh_deflection=0.0001)
 
-    @Part
+    @Part(in_tree=False)
     def wing3_structure_shell(self):
         return LoftedShell([self.airfoil6_scaled, self.airfoil5_scaled])
 
-    @Part
+    @Part (in_tree= False)
     def wing3_structure_thickshell(self):
         return ThickShell(built_from=self.wing3_structure_shell, offset = -0.0001*10**3)
 
