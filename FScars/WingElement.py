@@ -5,6 +5,8 @@ from Airfoil import Airfoil
 from ref_frame import Frame
 from EndPlates import EndPlate
 import numpy as np
+from parapy.core.decorators import Action
+from parapy.gui.wx_utils import popup
 
 
 class WingElement(GeomBase):
@@ -135,6 +137,14 @@ class WingElement(GeomBase):
                            factor=500,
                            mesh_deflection=0.0001)
 
+    @Part
+    def wing3_structure_shell(self):
+        return LoftedShell([self.airfoil6_scaled, self.airfoil5_scaled])
+
+    @Part
+    def wing3_structure_thickshell(self):
+        return ThickShell(built_from=self.wing3_structure_shell, offset = -0.0001*10**3)
+
     @Part (in_tree= False)
     def airfoil5_scaled_rotated(self):
         return RotatedCurve(curve_in=self.airfoil5_scaled, angle=-80 * np.pi / 180,
@@ -151,6 +161,37 @@ class WingElement(GeomBase):
     # @Part
     # def airfoil1_scaled_edits(self):
     #     return RotatedCurve(curve_in = self.airfoil1_scaled, angle = 20*np.pi/90, rotation_point = self.airfoil1_scaled.position, vector = Vector(0,1,0))
+
+    @Part
+    def randombox(self):
+        return Box(1,1,2,position=Position(Point(0, 0, 0)))
+
+    @Part
+    def randombox_translated(self):
+        return TranslatedShape(shape_in = self.randombox, displacement=Vector(-self.randombox.cog[0], -self.randombox.cog[1], -self.randombox.cog[2]))
+
+
+    @Action
+    def beambending(self):
+
+        density = 1400 #kg/m3
+        Emod = 56.9 * 10**9 #Pa
+
+        Ixx = self.wing3_structure_thickshell.matrix_of_inertia[0][0] * density/((10**3)**5)
+        Iyy = self.wing3_structure_thickshell.matrix_of_inertia[1][1] * density/((10**3)**5)
+        Izz = self.wing3_structure_thickshell.matrix_of_inertia[2][2] * density/((10**3)**5)
+
+        print(Ixx, Iyy, Izz)
+
+        length = (self.airfoil6_scaled.position[1] - self.airfoil5_scaled.position[1])/1000
+        load = 250
+        deflection = load*length**3/(48*Iyy*Emod)
+
+        popupstring = str(("With a load of "+ str(load)+ "N on wing 3, the deflection is found to be " + str(deflection)+  " mm"))
+        popup("Calculated Deflection", popupstring, cancel_button=False)
+
+
+
 
 if __name__ == '__main__':
     from parapy.gui import display

@@ -14,9 +14,12 @@ import os
 from parapy.gui.wx_utils import popup
 import vtk
 from Connector import Connector
-
+import enum
+from parapy.core.widgets import (
+    Button, CheckBox, ColorPicker, Dropdown, FilePicker, MultiCheckBox,
+    ObjectPicker, PyField, SingleSelection, TextField)
 from parapy.exchange.step.reader import STEPReader
-
+from SU2PostprocessingHelpers import *
 
 class FSCar(Base):
     speed = Input()
@@ -85,6 +88,15 @@ class FSCar(Base):
         output = stream.read()
         output
 
+    class Datatype(enum.Enum):
+        Pressure = 'Pressure'
+        Velocity = 'Velocity'
+
+    type_for_plot = Input("Pressure", widget=Dropdown(["Pressure", "Velocity"]))
+
+    @action(context=Action.Context.INSPECTOR, label="Produce y-cut plot", button_label="Run")
+    def produce_ycutplot(self):
+        cut_in_y(self.type_for_plot, 10, 50)
 
 
 if __name__ == '__main__':
