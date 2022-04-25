@@ -2,15 +2,15 @@ from parapy.core import *
 from parapy.geom import *
 
 class EndPlate(GeomBase):
-    height=Input()
-    width=Input()
-    depth=Input()
+    height=Input(900)
+    width=Input(10)
+    length=Input(1000)
 
     @Part
     def end_plate1(self):
-        return Box(width=10,
-                   length=1000,
-                   height=900,
+        return Box(width=self.width,
+                   length=self.length,
+                   height=self.height,
                    color="red",
                    position= translate(rotate(self.position,"z", 90, deg=True), "y", -2210, "z", 700, "x", -500))
 
@@ -23,10 +23,10 @@ class EndPlate(GeomBase):
     #                color="red")
 
     @Part
-    def plt2(self):
+    def end_plate2(self):
         return MirroredShape(shape_in=self.end_plate1, reference_point=self.position,
                              vector1=(1, 0, 0),
-                             vector2=(0, 0, 1))
+                             vector2=(0, 0, 1), color="red")
 
 if __name__ == '__main__':
     from parapy.gui import display

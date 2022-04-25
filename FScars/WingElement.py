@@ -17,7 +17,7 @@ class WingElement(GeomBase):
     span = Input(1000)
     #meanChord = Input()
     twistDistribution = Input()
-    airfoil_name=Input()
+    airfoil_name=Input("2412")
     chord=Input(500)
 
     @Part
@@ -29,7 +29,7 @@ class WingElement(GeomBase):
         return Frame(pos=self.position)
 
 
-    @Part   (in_tree=False)
+    @Part  (in_tree=False)
     def airfoil1_unscaled(self):
         return Naca4AirfoilCurve(designation=self.airfoil_name,
                                  position= translate(rotate(self.position, "x", 180, deg=True), "x", 1800, "y", 500,"z", -800))
@@ -221,7 +221,7 @@ if __name__ == '__main__':
     from parapy.gui import display
 
     obj = WingElement(label="aircraft",
-                      airfoil_name="2412"
+                      #airfoil_name= "2412"
                       )
     display(obj)
 

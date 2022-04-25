@@ -23,9 +23,7 @@ class RearWing(GeomBase):
                       airfoil_name="2412")
     @Part
     def end_plates(self):
-        return EndPlate(height=self.height,
-                         width=self.width,
-                         depth=self.depth)
+        return EndPlate()
 
 if __name__ == '__main__':
     from parapy.gui import display
