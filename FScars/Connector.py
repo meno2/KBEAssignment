@@ -84,6 +84,15 @@ class Connector(GeomBase):
                              vector1=(1, 0, 0),
                              vector2=(0, 0, 1))
 
+    @Part
+    def merged_connector_right(self):
+        return FusedSolid(shape_in= self.cyl, tool = [self.cyl3, self.cyl5, self.cyl7, self.cyl9])
+
+    @Part
+    def merged_connector_left(self):
+        return MirroredShape(shape_in=self.merged_connector_right, reference_point=self.position,
+                             vector1=(1, 0, 0),
+                             vector2=(0, 0, 1))
 
 
 if __name__ == '__main__':
