@@ -2,7 +2,7 @@ from parapy.core import *
 from parapy.geom import *
 from WingElement import WingElement
 from EndPlates import EndPlate
-
+from Connector import Connector
 class RearWing(GeomBase):
 
     # @Attribute
@@ -24,6 +24,10 @@ class RearWing(GeomBase):
     @Part
     def end_plates(self):
         return EndPlate()
+
+    @Part
+    def connector(self):
+        return Connector()
 
 if __name__ == '__main__':
     from parapy.gui import display
