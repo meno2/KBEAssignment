@@ -21,12 +21,12 @@ class WingElement(GeomBase):
     chord=Input(500)
 
     @Part
-    def aircraft_frame(self):
+    def ref_frame(self):
         return Frame(pos=self.position)  # this helps visualizing the aircraft reference frame, /
         # which, in this case, is the same as the global reference frame XOY)
-    @Part
-    def wing_frame(self):
-        return Frame(pos=self.position)
+    # @Part
+    # def wing_frame(self):
+    #     return Frame(pos=self.position)
 
 
     @Part  (in_tree=False)
