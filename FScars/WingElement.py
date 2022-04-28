@@ -12,11 +12,7 @@ from parapy.gui.wx_utils import popup
 class WingElement(GeomBase):
 
     angleOfIncidence = Input(-20*np.pi/90)
-    #liftCoefficient = Input()
-    #dragCoefficient = Input()
     span = Input(1000)
-    #meanChord = Input()
-    #twistDistribution = Input()
     airfoil_name = Input("2412")
     chord = Input(500)
 
