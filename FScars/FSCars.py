@@ -39,9 +39,9 @@ class FSCar(Base):
     def imported_geometry(self):
         return ImportedGeometry()
 
-    @Part
-    def connector(self):
-        return Connector()
+    # @Part
+    # def connector(self):
+    #     return Connector()
 
     ## CONSTRUCTING MESH ##
 
@@ -97,6 +97,9 @@ class FSCar(Base):
     @action(context=Action.Context.INSPECTOR, label="Produce y-cut plot", button_label="Run")
     def produce_ycutplot(self):
         cut_in_y(self.type_for_plot, 10, 50)
+
+
+
 
 
 if __name__ == '__main__':

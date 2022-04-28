@@ -16,7 +16,7 @@ class WingElement(GeomBase):
     #dragCoefficient = Input()
     span = Input(1000)
     #meanChord = Input()
-    twistDistribution = Input()
+    #twistDistribution = Input()
     airfoil_name = Input("2412")
     chord = Input(500)
 
@@ -136,41 +136,6 @@ class WingElement(GeomBase):
     ##
     ## Defining Wing 2:
     ##
-
-
-
-
-
-
-    # @Part(in_tree=False)
-    # def airfoil22_unscaled(self):
-    #     return Naca4AirfoilCurve(designation=self.airfoil_name,
-    #                              position=translate(
-    #                                  rotate(translate(self.position, 'y', self.span , "x", 1800), "x", 180,
-    #                                         deg=True), "y", 500, "z", -800))
-
-    # @Part(in_tree=False)
-    # def airfoil22_scaled(self):
-    #     return ScaledCurve(curve_in=self.airfoil22_unscaled,
-    #                        reference_point=self.airfoil22_unscaled.start,
-    #                        factor=self.chord,
-    #                        mesh_deflection=0.0001)
-    #
-    # @Part(in_tree=False)
-    # def airfoil22_scaled_rotated(self):
-    #     return RotatedCurve(curve_in=self.airfoil22_scaled, angle=5*np.pi/180,
-    #                         rotation_point=self.airfoil22_scaled.position, vector=Vector(0, 1, 0))
-
-    # @Part(in_tree=False)
-    # def airfoil21_scaled_rotated(self):
-    #     return RotatedCurve(curve_in=self.airfoil21_scaled, angle=-2 * np.pi / 180,
-    #                         rotation_point=self.airfoil21_scaled.position, vector=Vector(0, 1, 0))
-
-
-    # @Part
-    # def wing_loft_solid21(self):  # generate a surface
-    #     return LoftedSolid([self.airfoil21_scaled_rotated, self.airfoil22_scaled_rotated],
-    #                        mesh_deflection=0.0001)
 
     @Part (in_tree=False)
     def airfoil3_unscaled(self):
