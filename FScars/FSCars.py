@@ -31,7 +31,6 @@ class FSCar(Base):
     boundingboxinlet = Input(2.5*10**3)
     meshresolution = Input(0.02*10**3)
 
-
     @Part
     def rear_wing(self):
         return RearWing()
@@ -78,6 +77,7 @@ class FSCar(Base):
     @action(context=Action.Context.INSPECTOR, label="Once generated, export mesh", button_label="Export")
     def export_mesh(self):
         popup("Process Initiated", "Mesh is being exported - check Python log for status", cancel_button=False)
+        print("Generating Mesh: ...")
         parapy.lib.su2.write_su2(self.mesh, "mesh_of_car.su2")
         preprocessing("mesh_of_car.su2", ["Front", "Right", "Top", "Left", "Bottom", "Rear", "Wall"])
 
@@ -102,9 +102,8 @@ class FSCar(Base):
 if __name__ == '__main__':
     from parapy.gui import display
 
-    GeometrySTEP = STEPReader(filename=  "StructuralChassis.stp")
-    CFDModel = STEPReader(filename=  "DUT21_CFDModel.stp")
+    GeometrySTEP = STEPReader(filename="StructuralChassis.stp")
+    CFDModel = STEPReader(filename="DUT21_CFDModel.stp")
     obj = FSCar()
-
 
     display((obj, GeometrySTEP, CFDModel))

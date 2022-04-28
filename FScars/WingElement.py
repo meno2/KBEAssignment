@@ -17,8 +17,16 @@ class WingElement(GeomBase):
     span = Input(1000)
     #meanChord = Input()
     twistDistribution = Input()
-    airfoil_name=Input("2412")
-    chord=Input(500)
+    airfoil_name = Input("2412")
+    chord = Input(500)
+
+    thickness_per_layer=0.0001*10**3
+    wing1_amount_of_layers = Input(1.0)
+    wing2_amount_of_layers = Input(1.0)
+    wing3_amount_of_layers = Input(1.0)
+    Emod = Input(56.9*10**9)
+
+
 
     @Part
     def ref_frame(self):
@@ -43,21 +51,96 @@ class WingElement(GeomBase):
 
 
     @Part   (in_tree=False)
-    def airfoil21_unscaled(self):
+    def airfoil2_unscaled(self):
         return Naca4AirfoilCurve(designation=self.airfoil_name,
                                  position=translate(rotate(translate(self.position, 'y', self.span, "x", 1800), "x", 180, deg=True), "y", 500, "z", -800))
 
     @Part (in_tree=False)
-    def airfoil21_scaled(self):
-        return ScaledCurve(curve_in=self.airfoil21_unscaled,
-                           reference_point=self.airfoil21_unscaled.start,
+    def airfoil2_scaled(self):
+        return ScaledCurve(curve_in=self.airfoil2_unscaled,
+                           reference_point=self.airfoil2_unscaled.start,
                            factor=self.chord,
                            mesh_deflection=0.0001)
 
     @Part
     def wing_loft_solid(self):  # generate a surface
-        return LoftedSolid([self.airfoil1_scaled, self.airfoil21_scaled],
-                             mesh_deflection=0.0001)
+        return LoftedSolid([self.airfoil1_scaled, self.airfoil2_scaled],
+                           mesh_deflection=0.0001)
+
+
+    ##
+    ## Structures Module for wing 1:
+    ##
+
+    @Part(in_tree=False)
+    def wing1_structure_shell(self):
+        return LoftedShell([self.airfoil2_scaled, self.airfoil1_scaled])
+
+    @Part(in_tree=False)
+    def wing1_line1(self):
+        return LineSegment(start=self.wing1_structure_shell.edges[1].start, end=self.wing1_structure_shell.edges[1].end)
+
+    @Part(in_tree=False)
+    def wing1_line2(self):
+        return LineSegment(start=self.wing1_structure_shell.edges[1].start, end=(self.wing1_structure_shell.edges[1].start-Point(5,0,0)))
+
+    @Part(in_tree=False)
+    def wing1_line3(self):
+        return LineSegment(start=self.wing1_structure_shell.edges[1].end, end = (self.wing1_structure_shell.edges[1].end-Point(5,0,0)))
+
+    @Part(in_tree=False)
+    def wing1_line4(self):
+        return LineSegment(start=(self.wing1_structure_shell.edges[1].start-Point(5,0,0)), end=(self.wing1_structure_shell.edges[1].end-Point(5,0,0)))
+
+    @Part(in_tree=False)
+    def wing1_filledsurface(self):
+        return FilledSurface(curves=[self.wing1_line1, self.wing1_line2, self.wing1_line3, self.wing1_line4])
+
+    @Part(in_tree=False)
+    def wing1_structure(self):
+        return LoftedSolid([self.airfoil2_scaled, self.airfoil1_scaled])
+
+    @Part(in_tree=False)
+    def wing1_extrudedsolid(self):
+        return ExtrudedShell(profile=self.wing1_filledsurface, distance=100, mirrored_extent=True)
+
+    @Part(in_tree=False)
+    def wing1_subtractshell(self):
+        return Subtracted(shape_in=self.wing1_structure, tool=self.wing1_extrudedsolid.bbox.box)
+
+    @Part(in_tree=False)
+    def wing1_fusedshell(self):
+        return FusedShell(shape_in=self.wing1_subtractshell.faces[0], tool=self.wing1_subtractshell.faces[1])
+
+    @Part(in_tree=False)
+    def wing1_structure_thickshell2(self):
+        return ThickShell(built_from=self.wing1_fusedshell, offset = -self.wing1_skin_thickness)
+
+    @Action
+    def Airfoil1bending(self):
+        self.wing1_skin_thickness = self.wing1_amount_of_layers*self.thickness_per_layer
+        print(self.wing1_skin_thickness)
+
+        Ixx = self.wing1_structure_thickshell2.faces[2].matrix_of_inertia[0][0]*10**-16
+        Iyy = self.wing1_structure_thickshell2.faces[2].matrix_of_inertia[1][1]*10**-16
+        Izz = self.wing1_structure_thickshell2.faces[2].matrix_of_inertia[2][2]*10**-16
+
+        length = (self.airfoil2_scaled.position[1] - self.airfoil1_scaled.position[1])/1000
+        load = 250
+        deflection = load*length**3/(48*Iyy*self.Emod)
+
+        popupstring = str(("With a load of "+ str(load)+ "N on wing 1, the deflection is found to be " + str(round(deflection,3))+  " mm"))
+        popup("Calculated Deflection", popupstring, cancel_button=False)
+
+
+    ##
+    ## Defining Wing 2:
+    ##
+
+
+
+
+
 
     # @Part(in_tree=False)
     # def airfoil22_unscaled(self):
@@ -134,6 +217,78 @@ class WingElement(GeomBase):
 
                              mesh_deflection=0.0001)
 
+
+    ##
+    ## Structures Module for wing 2:
+    ##
+
+    @Part(in_tree=False)
+    def wing2_structure_shell(self):
+        return LoftedShell([self.airfoil4_scaled, self.airfoil3_scaled])
+
+    @Part(in_tree=False)
+    def wing2_line1(self):
+        return LineSegment(start=self.wing2_structure_shell.edges[1].start, end=self.wing2_structure_shell.edges[1].end)
+
+    @Part(in_tree=False)
+    def wing2_line2(self):
+        return LineSegment(start=self.wing2_structure_shell.edges[1].start, end=(self.wing2_structure_shell.edges[1].start-Point(5,0,0)))
+
+    @Part(in_tree=False)
+    def wing2_line3(self):
+        return LineSegment(start=self.wing2_structure_shell.edges[1].end, end = (self.wing2_structure_shell.edges[1].end-Point(5,0,0)))
+
+    @Part(in_tree=False)
+    def wing2_line4(self):
+        return LineSegment(start=(self.wing2_structure_shell.edges[1].start-Point(5,0,0)), end=(self.wing2_structure_shell.edges[1].end-Point(5,0,0)))
+
+    @Part(in_tree=False)
+    def wing2_filledsurface(self):
+        return FilledSurface(curves=[self.wing2_line1, self.wing2_line2, self.wing2_line3, self.wing2_line4])
+
+    @Part(in_tree=False)
+    def wing2_structure(self):
+        return LoftedSolid([self.airfoil4_scaled, self.airfoil3_scaled])
+
+    @Part(in_tree=False)
+    def wing2_extrudedsolid(self):
+        return ExtrudedShell(profile=self.wing2_filledsurface, distance=100, mirrored_extent=True)
+
+    @Part(in_tree=False)
+    def wing2_subtractshell(self):
+        return Subtracted(shape_in=self.wing2_structure, tool=self.wing2_extrudedsolid.bbox.box)
+
+    @Part(in_tree=False)
+    def wing2_fusedshell(self):
+        return FusedShell(shape_in=self.wing2_subtractshell.faces[0], tool=self.wing2_subtractshell.faces[1])
+
+    @Part(in_tree=False)
+    def wing2_structure_thickshell2(self):
+        return ThickShell(built_from=self.wing2_fusedshell, offset = -self.wing2_skin_thickness)
+
+    @Action
+    def Airfoil2bending(self):
+        self.wing2_skin_thickness = self.wing2_amount_of_layers*self.thickness_per_layer
+
+        Ixx = self.wing2_structure_thickshell2.faces[2].matrix_of_inertia[0][0]*10**-16
+        Iyy = self.wing2_structure_thickshell2.faces[2].matrix_of_inertia[1][1]*10**-16
+        Izz = self.wing2_structure_thickshell2.faces[2].matrix_of_inertia[2][2]*10**-16
+
+        length = (self.airfoil4_scaled.position[1] - self.airfoil3_scaled.position[1])/1000
+        load = 250
+        deflection = load*length**3/(48*Iyy*self.Emod)
+
+        popupstring = str(("With a load of "+ str(load)+ "N on wing 2, the deflection is found to be " + str(round(deflection,3))+  " mm"))
+        popup("Calculated Deflection", popupstring, cancel_button=False)
+
+
+    ##
+    ## Defining Wing 3:
+    ##
+
+
+
+
     @Part   (in_tree=False)
     def airfoil5_unscaled(self):
         return Naca4AirfoilCurve(designation=self.airfoil_name,
@@ -160,15 +315,6 @@ class WingElement(GeomBase):
                            reference_point=self.airfoil6_unscaled.start,
                            factor=self.chord*0.5,
                            mesh_deflection=0.0001)
-
-    @Part(in_tree=False)
-    def wing3_structure_shell(self):
-        return LoftedShell([self.airfoil6_scaled, self.airfoil5_scaled])
-
-    @Part (in_tree= False)
-    def wing3_structure_thickshell(self):
-        return ThickShell(built_from=self.wing3_structure_shell, offset = -0.0001*10**3)
-
     @Part (in_tree= False)
     def airfoil5_scaled_rotated(self):
         return RotatedCurve(curve_in=self.airfoil5_scaled, angle=-80 * np.pi / 180,
@@ -178,40 +324,73 @@ class WingElement(GeomBase):
     def airfoil6_scaled_rotated(self):
         return RotatedCurve(curve_in=self.airfoil6_scaled, angle=-80 * np.pi / 180,
                             rotation_point=self.airfoil6_scaled.position, vector=Vector(0, 1, 0))
+
     @Part
     def wing_loft_solid3(self):  # generate a surface
         return LoftedSolid([self.airfoil5_scaled_rotated, self.airfoil6_scaled_rotated],
-                             mesh_deflection=0.0001)
-    # @Part
-    # def airfoil1_scaled_edits(self):
-    #     return RotatedCurve(curve_in = self.airfoil1_scaled, angle = 20*np.pi/90, rotation_point = self.airfoil1_scaled.position, vector = Vector(0,1,0))
+                           mesh_deflection=0.0001)
 
-    @Part
-    def randombox(self):
-        return Box(1,1,2,position=Position(Point(0, 0, 0)))
+    ##
+    ## Structures Module for wing 3:
+    ##
 
-    @Part
-    def randombox_translated(self):
-        return TranslatedShape(shape_in = self.randombox, displacement=Vector(-self.randombox.cog[0], -self.randombox.cog[1], -self.randombox.cog[2]))
+    @Part(in_tree=False)
+    def wing3_structure_shell(self):
+        return LoftedShell([self.airfoil6_scaled, self.airfoil5_scaled])
 
+    @Part(in_tree=False)
+    def wing3_line1(self):
+        return LineSegment(start=self.wing3_structure_shell.edges[1].start, end=self.wing3_structure_shell.edges[1].end)
+
+    @Part(in_tree=False)
+    def wing3_line2(self):
+        return LineSegment(start=self.wing3_structure_shell.edges[1].start, end=(self.wing3_structure_shell.edges[1].start-Point(5,0,0)))
+
+    @Part(in_tree=False)
+    def wing3_line3(self):
+        return LineSegment(start=self.wing3_structure_shell.edges[1].end, end = (self.wing3_structure_shell.edges[1].end-Point(5,0,0)))
+
+    @Part(in_tree=False)
+    def wing3_line4(self):
+        return LineSegment(start=(self.wing3_structure_shell.edges[1].start-Point(5,0,0)), end=(self.wing3_structure_shell.edges[1].end-Point(5,0,0)))
+
+    @Part(in_tree=False)
+    def wing3_filledsurface(self):
+        return FilledSurface(curves=[self.wing3_line1, self.wing3_line2, self.wing3_line3, self.wing3_line4])
+
+    @Part(in_tree=False)
+    def wing3_structure(self):
+        return LoftedSolid([self.airfoil6_scaled, self.airfoil5_scaled])
+
+    @Part(in_tree=False)
+    def wing3_extrudedsolid(self):
+        return ExtrudedShell(profile=self.wing3_filledsurface, distance=100, mirrored_extent=True)
+
+    @Part(in_tree=False)
+    def wing3_subtractshell(self):
+        return Subtracted(shape_in=self.wing3_structure, tool=self.wing3_extrudedsolid.bbox.box)
+
+    @Part(in_tree=False)
+    def wing3_fusedshell(self):
+        return FusedShell(shape_in=self.wing3_subtractshell.faces[0], tool=self.wing3_subtractshell.faces[1])
+
+    @Part(in_tree=False)
+    def wing3_structure_thickshell2(self):
+        return ThickShell(built_from=self.wing3_fusedshell, offset = -self.wing3_skin_thickness)
 
     @Action
-    def beambending(self):
+    def Airfoil3bending(self):
+        self.wing3_skin_thickness = self.wing3_amount_of_layers*self.thickness_per_layer
 
-        density = 1400 #kg/m3
-        Emod = 56.9 * 10**9 #Pa
-
-        Ixx = self.wing3_structure_thickshell.matrix_of_inertia[0][0] * density/((10**3)**5)
-        Iyy = self.wing3_structure_thickshell.matrix_of_inertia[1][1] * density/((10**3)**5)
-        Izz = self.wing3_structure_thickshell.matrix_of_inertia[2][2] * density/((10**3)**5)
-
-        print(Ixx, Iyy, Izz)
+        Ixx = self.wing3_structure_thickshell2.faces[2].matrix_of_inertia[0][0]*10**-16
+        Iyy = self.wing3_structure_thickshell2.faces[2].matrix_of_inertia[1][1]*10**-16
+        Izz = self.wing3_structure_thickshell2.faces[2].matrix_of_inertia[2][2]*10**-16
 
         length = (self.airfoil6_scaled.position[1] - self.airfoil5_scaled.position[1])/1000
         load = 250
-        deflection = load*length**3/(48*Iyy*Emod)
+        deflection = load*length**3/(48*Iyy*self.Emod)
 
-        popupstring = str(("With a load of "+ str(load)+ "N on wing 3, the deflection is found to be " + str(deflection)+  " mm"))
+        popupstring = str(("With a load of "+ str(load)+ "N on wing 3, the deflection is found to be " + str(round(deflection,3))+  " mm"))
         popup("Calculated Deflection", popupstring, cancel_button=False)
 
 
