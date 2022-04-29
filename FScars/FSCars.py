@@ -16,21 +16,21 @@ import vtk
 from Connector import Connector
 import enum
 from parapy.core.widgets import (
-    Button, CheckBox, ColorPicker, Dropdown, FilePicker, MultiCheckBox,
-    ObjectPicker, PyField, SingleSelection, TextField)
+     Dropdown
+    )
 from parapy.exchange.step.reader import STEPReader
 from SU2PostprocessingHelpers import *
+
 
 class FSCar(Base):
     velocity = Input(10)
     rideHeight = Input()
 
-    boundingboxheight = Input(2*10**3)
-    boundingboxwidth = Input(1*10**3)
-    boundingboxlength = Input(6*10**3)
-    boundingboxinlet = Input(2.5*10**3)
-    meshresolution = Input(0.02*10**3)
-
+    boundingboxheight = Input(2 * 10 ** 3)
+    boundingboxwidth = Input(1 * 10 ** 3)
+    boundingboxlength = Input(6 * 10 ** 3)
+    boundingboxinlet = Input(2.5 * 10 ** 3)
+    meshresolution = Input(0.02 * 10 ** 3)
 
     @Part
     def rear_wing(self):

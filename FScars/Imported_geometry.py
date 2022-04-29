@@ -1,7 +1,7 @@
 from parapy.core import *
 from parapy.geom import *
 from parapy.exchange.step.reader import STEPReader
-import numpy as np
+
 
 class ImportedGeometry(GeomBase):
 	GeometrySTEP = STEPReader(filename=  "GeometryToImport.stp")

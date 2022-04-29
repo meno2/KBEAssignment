@@ -1,21 +1,18 @@
 from parapy.core import *
 from parapy.geom import *
 from kbeutils.geom import Naca4AirfoilCurve
-from Airfoil import Airfoil
+
 from ref_frame import Frame
-from EndPlates import EndPlate
+
 import numpy as np
 from parapy.core.decorators import Action
 from parapy.gui.wx_utils import popup
-from parapy.gui.viewer import Viewer
+
 
 class WingElement(GeomBase):
 
     angleOfIncidence = Input(-20*np.pi/90)
-    #liftCoefficient = Input()
-    #dragCoefficient = Input()
     span = Input(1000)
-    #meanChord = Input()
     twistDistribution = Input()
     airfoil_name = Input("2412")
     chord = Input(500)
@@ -34,14 +31,14 @@ class WingElement(GeomBase):
     # @Part
     # def wing_frame(self):
     #     return Frame(pos=self.position)
-
+    #here we get the airfoil from KBEutils
 
     @Part  (in_tree=False)
     def airfoil1_unscaled(self):
         return Naca4AirfoilCurve(designation=self.airfoil_name,
                                  position= translate(rotate(self.position, "x", 180, deg=True), "x", 1800, "y", 500,"z", -800))
 
-    @Part (in_tree= False)
+    @Part (in_tree= False) # the airfoil is scaled to suitable  size
     def airfoil1_scaled(self):
         return ScaledCurve(curve_in= self.airfoil1_unscaled,
                            reference_point= self.airfoil1_unscaled.end,
@@ -62,7 +59,7 @@ class WingElement(GeomBase):
                            mesh_deflection=0.0001)
 
     @Part
-    def wing_loft_solid(self):  # generate a surface
+    def wing_loft_solid(self):  # generate the wing solid
         return LoftedSolid([self.airfoil1_scaled, self.airfoil2_scaled],
                            mesh_deflection=0.0001)
 
@@ -342,7 +339,7 @@ class WingElement(GeomBase):
     def wing3_structure_thickshell2(self):
         return ThickShell(built_from=self.wing3_fusedshell, offset = -self.wing3_skin_thickness)
 
-    @Action
+    @Action  # checking for bending requirements
     def Airfoil3bending(self):
         #Ixx = self.wing3_structure_thickshell2.faces[2].matrix_of_inertia[0][0]*10**-16
         iyy = self.wing3_structure_thickshell2.faces[2].matrix_of_inertia[1][1]*10**-16
@@ -423,7 +420,6 @@ class WingElement(GeomBase):
 if __name__ == '__main__':
     from parapy.gui import display
 
-    obj = WingElement(label="aircraft",
-                      #airfoil_name= "2412"
+    obj = WingElement(label="wing element"
                       )
     display(obj)
