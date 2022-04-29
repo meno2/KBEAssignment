@@ -2,34 +2,31 @@ from parapy.core import *
 from parapy.geom import *
 from parapy.mesh import salome
 
-#from FScars import Connector
+# from FScars import Connector
 from Rearwing import RearWing
 from Imported_geometry import ImportedGeometry
 from parapy.core import action
 from parapy.core.decorators import Action
-from parapy.lib.su2 import *
 from SU2Preprocessing import preprocessing
-import subprocess
 import os
 from parapy.gui.wx_utils import popup
-import vtk
-from Connector import Connector
 import enum
 from parapy.core.widgets import (
-    Button, CheckBox, ColorPicker, Dropdown, FilePicker, MultiCheckBox,
-    ObjectPicker, PyField, SingleSelection, TextField)
+     Dropdown
+    )
 from parapy.exchange.step.reader import STEPReader
 from SU2PostprocessingHelpers import *
+
 
 class FSCar(Base):
     speed = Input()
     rideHeight = Input()
 
-    boundingboxheight = Input(2*10**3)
-    boundingboxwidth = Input(1*10**3)
-    boundingboxlength = Input(6*10**3)
-    boundingboxinlet = Input(2.5*10**3)
-    meshresolution = Input(0.02*10**3)
+    boundingboxheight = Input(2 * 10 ** 3)
+    boundingboxwidth = Input(1 * 10 ** 3)
+    boundingboxlength = Input(6 * 10 ** 3)
+    boundingboxinlet = Input(2.5 * 10 ** 3)
+    meshresolution = Input(0.02 * 10 ** 3)
 
     @Part
     def rear_wing(self):
@@ -97,9 +94,6 @@ class FSCar(Base):
     @action(context=Action.Context.INSPECTOR, label="Produce y-cut plot", button_label="Run")
     def produce_ycutplot(self):
         cut_in_y(self.type_for_plot, 10, 50)
-
-
-
 
 
 if __name__ == '__main__':
