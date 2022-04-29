@@ -33,6 +33,10 @@ class FSCar(Base):
     boundingboxlength = Input(6 * 10 ** 3)
     boundingboxinlet = Input(2.5 * 10 ** 3)
     meshresolution = Input(0.02 * 10 ** 3)
+    plot_resolution_margin = Input(20)
+    plot_xcut_loc = Input(20)
+    plot_ycut_loc = Input(30)
+    plot_zcut_loc = Input(50)
 
     @Part
     def rear_wing(self):
@@ -101,7 +105,15 @@ class FSCar(Base):
 
     @action(context=Action.Context.INSPECTOR, label="Produce y-cut plot", button_label="Run")
     def produce_ycutplot(self):
-        cut_in_y(self.type_for_plot, 10, 50)
+        cut_in_y(self.type_for_plot, self.plot_ycut_loc, self.plot_resolution_margin)
+
+    @action(context=Action.Context.INSPECTOR, label="Produce x-cut plot", button_label="Run")
+    def produce_xcutplot(self):
+        cut_in_x(self.type_for_plot, self.plot_xcut_loc, self.plot_resolution_margin)
+
+    @action(context=Action.Context.INSPECTOR, label="Produce z-cut plot", button_label="Run")
+    def produce_zcutplot(self):
+        cut_in_z(self.type_for_plot, self.plot_zcut_loc, self.plot_resolution_margin)
 
     @Part
     def writer_fullcar(self):
