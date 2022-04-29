@@ -132,9 +132,21 @@ def cut_in_y(data_type, yloc, ymargin):
 					cut_xvals.append(xarray[i])
 					cut_valvals.append(valarray[i]*0.001)
 					cut_zvals.append(zarray[i])
+	print(data_type)
 
+	if str(data_type) == "Pressure":
+		title = str(data_type) + " at y = "+ str(yloc) + " mm given in MPa"
+	if str(data_type) == "Velocity":
+		title = str(data_type) + " at y = "+ str(yloc) + " mm given in m/s"
+
+	plt.colorbar()
+	plt.title(title)
+	plt.xlabel("Position in X [mm]")
+	plt.ylabel("Position in Z [mm]")
 	plt.scatter(cut_xvals, cut_zvals, color = 'black', s=0.3)
 	plt.axis('equal')
+	savefilename = str(data_type)+"at"+str(yloc)+"mm.pdf"
+	plt.savefig(savefilename)
 	plt.show()
 
 #
