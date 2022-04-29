@@ -15,6 +15,8 @@ from parapy.gui.wx_utils import popup
 import vtk
 from Connector import Connector
 import enum
+from parapy.exchange.step import STEPWriter
+
 from parapy.core.widgets import (
      Dropdown
     )
@@ -101,6 +103,22 @@ class FSCar(Base):
     def produce_ycutplot(self):
         cut_in_y(self.type_for_plot, 10, 50)
 
+    @Part
+    def writer_fullcar(self):
+        return STEPWriter(trees=[self.rear_wing, self.imported_geometry], filename="ExportFullCar.stp")
+
+    @Part
+    def writer_rearwing(self):
+        return STEPWriter(trees=[self.rear_wing], filename="ExportRearWing.stp")
+
+
+    @action(context=Action.Context.INSPECTOR, label="Write STEP of entire car", button_label="Export")
+    def write_step(self):
+        self.writer_fullcar.write()
+
+    @action(context=Action.Context.INSPECTOR, label="Write STEP of rear wing", button_label="Export")
+    def write_step2(self):
+        self.writer_rearwing.write()
 
 
 
