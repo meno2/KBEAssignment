@@ -3,10 +3,11 @@ from parapy.geom import *
 
 class Connector(GeomBase):
 
+    point_of_attachment=Input(1290)
     @Part
     def cyl(self):
         return Box(width= 10, length= 10, height=400,
-                        position=Position(Point(1300, 100, 440)))
+                        position=Position(Point(self.point_of_attachment, 100, 440)))
 
     @Part
     def cyl2(self):
