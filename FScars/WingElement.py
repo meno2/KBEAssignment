@@ -7,21 +7,24 @@ from EndPlates import EndPlate
 import numpy as np
 from parapy.core.decorators import Action
 from parapy.gui.wx_utils import popup
-
+from parapy.gui.viewer import Viewer
 
 class WingElement(GeomBase):
 
     angleOfIncidence = Input(-20*np.pi/90)
+    #liftCoefficient = Input()
+    #dragCoefficient = Input()
     span = Input(1000)
+    #meanChord = Input()
+    twistDistribution = Input()
     airfoil_name = Input("2412")
     chord = Input(500)
 
-    thickness_per_layer=0.0001*10**3
-    wing1_amount_of_layers = Input(1.0)
-    wing2_amount_of_layers = Input(1.0)
-    wing3_amount_of_layers = Input(1.0)
     Emod = Input(56.9*10**9)
 
+    wing1_skin_thickness = Input(0.0001*10**3)
+    wing2_skin_thickness = Input(0.0001*10**3)
+    wing3_skin_thickness = Input(0.0001*10**3)
 
 
     @Part
@@ -114,9 +117,6 @@ class WingElement(GeomBase):
 
     @Action
     def Airfoil1bending(self):
-        self.wing1_skin_thickness = self.wing1_amount_of_layers*self.thickness_per_layer
-        print(self.wing1_skin_thickness)
-
         Ixx = self.wing1_structure_thickshell2.faces[2].matrix_of_inertia[0][0]*10**-16
         Iyy = self.wing1_structure_thickshell2.faces[2].matrix_of_inertia[1][1]*10**-16
         Izz = self.wing1_structure_thickshell2.faces[2].matrix_of_inertia[2][2]*10**-16
@@ -229,8 +229,6 @@ class WingElement(GeomBase):
 
     @Action
     def Airfoil2bending(self):
-        self.wing2_skin_thickness = self.wing2_amount_of_layers*self.thickness_per_layer
-
         Ixx = self.wing2_structure_thickshell2.faces[2].matrix_of_inertia[0][0]*10**-16
         Iyy = self.wing2_structure_thickshell2.faces[2].matrix_of_inertia[1][1]*10**-16
         Izz = self.wing2_structure_thickshell2.faces[2].matrix_of_inertia[2][2]*10**-16
@@ -341,7 +339,6 @@ class WingElement(GeomBase):
 
     @Action
     def Airfoil3bending(self):
-        self.wing3_skin_thickness = self.wing3_amount_of_layers*self.thickness_per_layer
 
         Ixx = self.wing3_structure_thickshell2.faces[2].matrix_of_inertia[0][0]*10**-16
         Iyy = self.wing3_structure_thickshell2.faces[2].matrix_of_inertia[1][1]*10**-16

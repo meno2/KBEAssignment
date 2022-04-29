@@ -11,6 +11,7 @@ class EndPlate(GeomBase):
     distance_from_wheel=Input(500)
 
 
+
     @Part
     def end_plate1(self):
         return Box(width=self.width,
@@ -31,10 +32,16 @@ class EndPlate(GeomBase):
                              vector2=(0, 0, 1), color="red")
 
     @Action  #to check for the dimension limitations
-    def height_from_ground(self):
-            popupstring = str(
-                "if the given height of the end plate is lower than 1.2 m from the ground so it has changed to the deffault value of 700 cm")
-            popup("Warning", popupstring, cancel_button=False)
+    def check_height_from_ground(self):
+            if self.height_from_floor > 1200:
+                popupstring = str(
+                "The given height of the end plate is higher than 1.2 m from the ground so it has changed to the default value of 700 cm")
+                popup("Warning", popupstring, cancel_button=False)
+            if self.height_from_floor <= 1200:
+                popupstring= str("The given height of the end plate is lower than 1.2 m from the ground, so it is rules compliant")
+                popup("Rules Met!", popupstring, cancel_button=False)
+
+
     @Action
     def distance_from_wheels(self):
         popupstring = str(
