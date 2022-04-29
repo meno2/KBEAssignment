@@ -2,15 +2,21 @@ from parapy.core import *
 from parapy.geom import *
 from parapy.mesh import salome
 
-# from FScars import Connector
+#from FScars import Connector
 from Rearwing import RearWing
 from Imported_geometry import ImportedGeometry
 from parapy.core import action
 from parapy.core.decorators import Action
-from SU2Preprocessing import preprocessing
+from parapy.lib.su2 import *
+from SU2Preprocessing import preprocessing, changevelocity
+import subprocess
 import os
 from parapy.gui.wx_utils import popup
+import vtk
+from Connector import Connector
 import enum
+from parapy.exchange.step import STEPWriter
+
 from parapy.core.widgets import (
      Dropdown
     )
@@ -19,7 +25,7 @@ from SU2PostprocessingHelpers import *
 
 
 class FSCar(Base):
-    speed = Input()
+    velocity = Input(10)
     rideHeight = Input()
 
     boundingboxheight = Input(2 * 10 ** 3)
@@ -27,6 +33,10 @@ class FSCar(Base):
     boundingboxlength = Input(6 * 10 ** 3)
     boundingboxinlet = Input(2.5 * 10 ** 3)
     meshresolution = Input(0.02 * 10 ** 3)
+    plot_resolution_margin = Input(20)
+    plot_xcut_loc = Input(20)
+    plot_ycut_loc = Input(30)
+    plot_zcut_loc = Input(50)
 
     @Part
     def rear_wing(self):
@@ -78,6 +88,12 @@ class FSCar(Base):
         parapy.lib.su2.write_su2(self.mesh, "mesh_of_car.su2")
         preprocessing("mesh_of_car.su2", ["Front", "Right", "Top", "Left", "Bottom", "Rear", "Wall"])
 
+    @action(context=Action.Context.INSPECTOR, label="Change Velocity", button_label="Update")
+    def update_velocity(self):
+        changevelocity(self.velocity)
+        popup("Success", "Velocity in config file has been changed to " + str(self.velocity) + "m/s!",
+              cancel_button=False)
+
     @action(context=Action.Context.INSPECTOR, label="Run SU2", button_label="Run")
     def run_SU2(self):
         popup("Process Initiated", "SU2 is being run - check Python log for status", cancel_button=False)
@@ -85,22 +101,42 @@ class FSCar(Base):
         output = stream.read()
         output
 
-    class Datatype(enum.Enum):
-        Pressure = 'Pressure'
-        Velocity = 'Velocity'
-
     type_for_plot = Input("Pressure", widget=Dropdown(["Pressure", "Velocity"]))
 
     @action(context=Action.Context.INSPECTOR, label="Produce y-cut plot", button_label="Run")
     def produce_ycutplot(self):
-        cut_in_y(self.type_for_plot, 10, 50)
+        cut_in_y(self.type_for_plot, self.plot_ycut_loc, self.plot_resolution_margin)
+
+    @action(context=Action.Context.INSPECTOR, label="Produce x-cut plot", button_label="Run")
+    def produce_xcutplot(self):
+        cut_in_x(self.type_for_plot, self.plot_xcut_loc, self.plot_resolution_margin)
+
+    @action(context=Action.Context.INSPECTOR, label="Produce z-cut plot", button_label="Run")
+    def produce_zcutplot(self):
+        cut_in_z(self.type_for_plot, self.plot_zcut_loc, self.plot_resolution_margin)
+
+    @Part
+    def writer_fullcar(self):
+        return STEPWriter(trees=[self.rear_wing, self.imported_geometry], filename="ExportFullCar.stp")
+
+    @Part
+    def writer_rearwing(self):
+        return STEPWriter(trees=[self.rear_wing], filename="ExportRearWing.stp")
+
+
+    @action(context=Action.Context.INSPECTOR, label="Write STEP of entire car", button_label="Export")
+    def write_step(self):
+        self.writer_fullcar.write()
+
+    @action(context=Action.Context.INSPECTOR, label="Write STEP of rear wing", button_label="Export")
+    def write_step2(self):
+        self.writer_rearwing.write()
+
 
 
 if __name__ == '__main__':
     from parapy.gui import display
 
-    GeometrySTEP = STEPReader(filename="StructuralChassis.stp")
-    CFDModel = STEPReader(filename="DUT21_CFDModel.stp")
     obj = FSCar()
 
-    display((obj, GeometrySTEP, CFDModel))
+    display(obj)
