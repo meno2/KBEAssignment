@@ -420,6 +420,6 @@ class WingElement(GeomBase):
 if __name__ == '__main__':
     from parapy.gui import display
 
-    obj = WingElement(label="aircraft"
+    obj = WingElement(label="wing element"
                       )
     display(obj)
