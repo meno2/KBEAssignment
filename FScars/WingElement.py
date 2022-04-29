@@ -117,17 +117,19 @@ class WingElement(GeomBase):
 
     @Action
     def Airfoil1bending(self):
-        Ixx = self.wing1_structure_thickshell2.faces[2].matrix_of_inertia[0][0]*10**-16
-        Iyy = self.wing1_structure_thickshell2.faces[2].matrix_of_inertia[1][1]*10**-16
-        Izz = self.wing1_structure_thickshell2.faces[2].matrix_of_inertia[2][2]*10**-16
+        iyy = self.wing1_structure_thickshell2.faces[2].matrix_of_inertia[1][1]*10**-16
 
         length = (self.airfoil2_scaled.position[1] - self.airfoil1_scaled.position[1])/1000
-        load = 250
-        deflection = load*length**3/(48*Iyy*self.Emod)
+        load = 200
+        deflection = load*length**3/(48*iyy*self.Emod)
 
         popupstring = str(("With a load of "+ str(load)+ "N on wing 1, the deflection is found to be " + str(round(deflection,3))+  " mm"))
         popup("Calculated Deflection", popupstring, cancel_button=False)
 
+        if deflection/load > 10/200:
+            popupstring = str("Warning! Deflections exceed the maximum allowable deflections according to "
+                              "Formula Student regulations! Consider changing the geometry or ply thickness.")
+            popup("Warning!", popupstring, cancel_button=False)
 
     ##
     ## Defining Wing 2:
@@ -229,17 +231,20 @@ class WingElement(GeomBase):
 
     @Action
     def Airfoil2bending(self):
-        Ixx = self.wing2_structure_thickshell2.faces[2].matrix_of_inertia[0][0]*10**-16
         Iyy = self.wing2_structure_thickshell2.faces[2].matrix_of_inertia[1][1]*10**-16
-        Izz = self.wing2_structure_thickshell2.faces[2].matrix_of_inertia[2][2]*10**-16
 
         length = (self.airfoil4_scaled.position[1] - self.airfoil3_scaled.position[1])/1000
-        load = 250
+        load = 200
         deflection = load*length**3/(48*Iyy*self.Emod)
 
-        popupstring = str(("With a load of "+ str(load)+ "N on wing 2, the deflection is found to be " + str(round(deflection,3))+  " mm"))
+        popupstring = str(("With a load of " + str(load) + "N on wing 2, the deflection is found to be "
+                           + str(round(deflection, 3))+ " mm"))
         popup("Calculated Deflection", popupstring, cancel_button=False)
 
+        if deflection/load > 10/200:
+            popupstring = str("Warning! Deflections exceed the maximum allowable deflections according to "
+                              "Formula Student regulations! Consider changing the geometry or ply thickness.")
+            popup("Warning!", popupstring, cancel_button=False)
 
     ##
     ## Defining Wing 3:
@@ -339,19 +344,80 @@ class WingElement(GeomBase):
 
     @Action
     def Airfoil3bending(self):
-
-        Ixx = self.wing3_structure_thickshell2.faces[2].matrix_of_inertia[0][0]*10**-16
-        Iyy = self.wing3_structure_thickshell2.faces[2].matrix_of_inertia[1][1]*10**-16
-        Izz = self.wing3_structure_thickshell2.faces[2].matrix_of_inertia[2][2]*10**-16
+        #Ixx = self.wing3_structure_thickshell2.faces[2].matrix_of_inertia[0][0]*10**-16
+        iyy = self.wing3_structure_thickshell2.faces[2].matrix_of_inertia[1][1]*10**-16
+        #Izz = self.wing3_structure_thickshell2.faces[2].matrix_of_inertia[2][2]*10**-16
 
         length = (self.airfoil6_scaled.position[1] - self.airfoil5_scaled.position[1])/1000
         load = 250
-        deflection = load*length**3/(48*Iyy*self.Emod)
+        deflection = load*length**3/(48*iyy*self.Emod)
 
-        popupstring = str(("With a load of "+ str(load)+ "N on wing 3, the deflection is found to be " + str(round(deflection,3))+  " mm"))
+        popupstring = str(("With a load of" + str(load) + "N on wing 3, the deflection is found to be " +
+                           str(round(deflection, 3)) + " mm"))
         popup("Calculated Deflection", popupstring, cancel_button=False)
 
+        if deflection/load > 10/200:
+            popupstring = str("Warning! Deflections exceed the maximum allowable deflections according to "
+                              "Formula Student regulations! Consider changing the geometry or ply thickness.")
+            popup("Warning!", popupstring, cancel_button=False)
 
+    @Action
+    def ExportDeflections(self):
+        file = open("DeflectionsResults.txt", "w")
+
+        lines = []
+
+        lines.append("Wing 1 skin thickness: \n")
+        lines.append(str(self.wing1_skin_thickness) + "\t [mm] \n")
+        lines.append("Wing 1 chord length: \n")
+        lines.append(str( self.chord) + "\t [mm] \n")
+        lines.append("Wing 2 skin thickness: \n")
+        lines.append(str(self.wing2_skin_thickness) + "\t [mm] \n")
+        lines.append("Wing 2 chord length: \n")
+        lines.append(str( self.chord*0.8) + "\t [mm] \n")
+
+        lines.append("Wing 3 skin thickness: \n")
+        lines.append(str(self.wing3_skin_thickness) + "\t [mm] \n")
+        lines.append("Wing 3 chord length: \n")
+        lines.append(str( self.chord*0.5) + "\t [mm] \n \n \n")
+
+        #Wing 1 deflection:
+        lines.append("Wing 1 Deflection calculation: \n")
+        iyy = self.wing1_structure_thickshell2.faces[2].matrix_of_inertia[1][1]*10**-16
+        length = (self.airfoil2_scaled.position[1] - self.airfoil1_scaled.position[1])/1000
+        load = 200
+        deflection = load*length**3/(48*iyy*self.Emod)
+
+        lines.append(str(("With a load of " + str(load) + "N on wing 1, the deflection is found to be " +
+                          str(round(deflection, 3))+ " mm \n  \n")))
+
+
+        #Wing 2 deflection:
+        lines.append("Wing 2 Deflection calculation: \n")
+        iyy = self.wing2_structure_thickshell2.faces[2].matrix_of_inertia[1][1]*10**-16
+        length = (self.airfoil4_scaled.position[1] - self.airfoil3_scaled.position[1])/1000
+        load = 200
+        deflection = load*length**3/(48*iyy*self.Emod)
+
+        lines.append(str(("With a load of " + str(load) + "N on wing 2, the deflection is found to be " +
+                          str(round(deflection, 3)) + " mm \n \n ")))
+
+
+        #Wing 3 deflection:
+        lines.append("Wing 3 Deflection calculation: \n")
+        iyy = self.wing3_structure_thickshell2.faces[2].matrix_of_inertia[1][1]*10**-16
+        length = (self.airfoil6_scaled.position[1] - self.airfoil5_scaled.position[1])/1000
+        load = 200
+        deflection = load*length**3/(48*iyy*self.Emod)
+
+        lines.append(str(("With a load of " + str(load) + "N on wing 3, the deflection is found to be " +
+                          str(round(deflection, 3)) + " mm \n \n ")))
+
+        popup("Export Result", "The Deflection Calculations have successfully been exported to DeflectionsResults.txt",
+              cancel_button=False)
+
+        file.writelines(lines)
+        file.close()
 
 
 if __name__ == '__main__':
@@ -361,5 +427,3 @@ if __name__ == '__main__':
                       #airfoil_name= "2412"
                       )
     display(obj)
-
-
