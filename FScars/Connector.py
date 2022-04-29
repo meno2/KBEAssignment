@@ -1,9 +1,9 @@
 from parapy.core import *
 from parapy.geom import *
-
+#all dimensions are in mm
 class Connector(GeomBase):
 
-    point_of_attachment=Input(1290)
+    point_of_attachment=Input(1290) #should not be more than 1290
     @Part
     def cyl(self):
         return Box(width= 10, length= 10, height=400,
