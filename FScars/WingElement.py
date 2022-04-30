@@ -27,9 +27,7 @@ class WingElement(GeomBase):
     def ref_frame(self):
         return Frame(pos=self.position)  # this helps visualizing the aircraft reference frame, /
         # which, in this case, is the same as the global reference frame XOY)
-    # @Part
-    # def wing_frame(self):
-    #     return Frame(pos=self.position)
+
     #here we get the airfoil from KBEutils
 
     @Part  (in_tree=False)
@@ -111,6 +109,7 @@ class WingElement(GeomBase):
     def wing1_structure_thickshell2(self):
         return ThickShell(built_from=self.wing1_fusedshell, offset = -self.wing1_skin_thickness)
 
+    @Attribute
     @Action
     def Airfoil1bending(self):
         iyy = self.wing1_structure_thickshell2.faces[2].matrix_of_inertia[1][1]*10**-16
@@ -225,6 +224,7 @@ class WingElement(GeomBase):
     def wing2_structure_thickshell2(self):
         return ThickShell(built_from=self.wing2_fusedshell, offset = -self.wing2_skin_thickness)
 
+    @Attribute
     @Action
     def Airfoil2bending(self):
         Iyy = self.wing2_structure_thickshell2.faces[2].matrix_of_inertia[1][1]*10**-16
@@ -338,6 +338,7 @@ class WingElement(GeomBase):
     def wing3_structure_thickshell2(self):
         return ThickShell(built_from=self.wing3_fusedshell, offset = -self.wing3_skin_thickness)
 
+    @Attribute
     @Action  # checking for bending requirements
     def Airfoil3bending(self):
         #Ixx = self.wing3_structure_thickshell2.faces[2].matrix_of_inertia[0][0]*10**-16
@@ -357,6 +358,7 @@ class WingElement(GeomBase):
                               "Formula Student regulations! Consider changing the geometry or ply thickness.")
             popup("Warning!", popupstring, cancel_button=False)
 
+    @Attribute
     @Action
     def ExportDeflections(self):
         file = open("DeflectionsResults.txt", "w")
