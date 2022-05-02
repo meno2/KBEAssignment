@@ -82,7 +82,7 @@ class FSCar(Base):
                                    self.geometry_to_mesh.faces[6:]])
 
 
-    @Attribute
+
     @action(context=Action.Context.INSPECTOR, label="Once generated, export mesh", button_label="Export")
     def export_mesh(self):
         popup("Process Initiated", "Mesh is being exported - check Python log for status", cancel_button=False)
